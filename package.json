@@ -1,0 +1,23 @@
+{
+  "name": "webcrawlerdev",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ASHISHYADAV85270/webcrawlerdev.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ASHISHYADAV85270/webcrawlerdev/issues"
+  },
+  "homepage": "https://github.com/ASHISHYADAV85270/webcrawlerdev#readme",
+  "description": "",
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}
