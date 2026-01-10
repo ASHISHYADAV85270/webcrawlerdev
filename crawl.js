@@ -44,24 +44,45 @@ function getURLsFromHTML(htmlBody, baseURL) {
 }
 
 
-async function crawlPage(baseURL) {
-    console.log(`acitvely crawling : ${baseURL}`);
+async function crawlPage(baseURL, currentURL, pagesMap) {
+    console.log(`acitvely crawling : ${currentURL}`);
+
+    const baseURLObj = new URL(baseURL);
+    const currentURLObj = new URL(currentURL);
+    // we dont want to go out of the context of the inputed domain . We dont want to crawl the whole browser
+    if (baseURLObj.hostname !== currentURLObj.hostname) {
+        return pagesMap;
+    }
+
+    const normalizedCurrentURL = normalizeUrl(currentURL);
+    if (pagesMap[normalizedCurrentURL] > 0) {
+        pagesMap[normalizedCurrentURL]++;
+        return pagesMap;
+    }
+    pagesMap[normalizedCurrentURL] = 1;
+
     try {
         const resp = await fetch(baseURL);
         if (resp.status > 399) {
             console.log(`error in fetch with Status Code : ${resp.status} , For the Url : ${baseURL}`);
-            return;
+            return pagesMap;
         }
 
         const contentType = resp.headers.get("content-type");
         if (!contentType.includes("text/html")) {
             console.log(`Non HTML tpye response , content-type: ${resp.contentType} , For the Url : ${baseURL}`);
-            return;
+            return pagesMap;
         }
-        console.log(await resp.text());
+        const htmlBody = await resp.text();
+        nextUrls = getURLsFromHTML(htmlBody, baseURL);
+        for (const nextUrl of nextUrls) {
+            pagesMap = await crawlPage(baseURL, nextUrl, pagesMap);
+        }
     } catch (err) {
         console.log(`error in fetch : ${err.message} , For the Url : ${baseURL}`);
     }
+
+    return pagesMap;
 }
 
 module.exports = {
