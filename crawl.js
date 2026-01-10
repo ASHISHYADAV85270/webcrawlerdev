@@ -20,11 +20,25 @@ function getURLsFromHTML(htmlBody, baseURL) {
     const urls = [];
     const dom = new JSDOM(htmlBody);
     const linkElements = dom.window.document.querySelectorAll("a"); // assuming all links are in <a> tags
-    for(const linkElement of linkElements){
-        const href = linkElement.href;
-        // const normalizedHref = normalizeUrl(href);
-        // urls.push(normalizedHref);
-        urls.push(href);
+    for (const linkElement of linkElements) {
+        // case for relative URL
+        if (linkElement.href.charAt(0) === '/') {
+            try {
+                // validatin URL 
+                const urlObj = new URL(`${baseURL}${linkElement.href}`)
+                urls.push(urlObj.href)
+            } catch (err) {
+                console.log(`error with relative url : ${err.message}`)
+            }
+        } else {
+            try {
+                // validatin URL 
+                const urlObj = new URL(linkElement.href)
+                urls.push(urlObj.href);
+            } catch (err) {
+                console.log(`error with absoltute url : ${err.message}`)
+            }
+        }
     }
     return urls;
 }

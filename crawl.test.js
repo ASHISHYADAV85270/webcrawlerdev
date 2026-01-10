@@ -47,3 +47,37 @@ test("getURLsFromHTML", () => {
     const expected = ["https://www.google.com/", "https://www.cricbuzz.com/"];
     expect(actual).toEqual(expected);
 })
+
+
+test("getURLsFromHTML relative", () => {
+    const inputHtmlBody = `
+    <html>
+    <body>
+    <a href="/path/">Google</a>
+    <a href="https://www.cricbuzz.com/">Cricbuzz</a>
+    <a href="https://www.twitter.com/">Cricbuzz</a>
+    </body>
+    </html>
+    `;
+    const inputBaseURL = "https://www.google.com";
+    const actual = getURLsFromHTML(inputHtmlBody, inputBaseURL);
+    const expected = ["https://www.google.com/path/", "https://www.cricbuzz.com/","https://www.twitter.com/"];
+    expect(actual).toEqual(expected);
+})
+
+
+test("getURLsFromHTML inValid URL", () => {
+    const inputHtmlBody = `
+    <html>
+    <body>
+    <a href="invalid">Google</a>
+    <a href="https://www.cricbuzz.com/">Cricbuzz</a>
+    <a href="https://www.twitter.com/">Cricbuzz</a>
+    </body>
+    </html>
+    `;
+    const inputBaseURL = "https://www.google.com";
+    const actual = getURLsFromHTML(inputHtmlBody, inputBaseURL);
+    const expected = [ "https://www.cricbuzz.com/","https://www.twitter.com/"];
+    expect(actual).toEqual(expected);
+})
