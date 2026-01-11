@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Crawler</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        input {
+            padding: 6px;
+            width: 300px;
+        }
+
+        button {
+            padding: 6px 12px;
+            margin-left: 6px;
+            cursor: pointer;
+        }
+
+        /* Loader */
+        .loader {
+            display: none;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+            width: 80%;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Website Crawler</h2>
+
+    <p style="max-width: 600px; color: #555;">
+        Please enter the website URL you want to crawl.
+        <strong>Make sure to include <code>https://</code> as a prefix</strong>
+        (example: <code>https://wagslane.dev</code>).
+    </p>
+    
+    <input
+        type="text"
+        id="baseUrlInput"
+        placeholder="https://example.com"
+    />
+    
+    <button id="crawlBtn" onclick="fetchData()">Crawl</button>
+
+    <div id="loader" class="loader">⏳ Crawling website, please wait...</div>
+
+    <table id="resultTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        async function fetchData() {
+            const baseURL = document.getElementById("baseUrlInput").value.trim();
+            const loader = document.getElementById("loader");
+            const table = document.getElementById("resultTable");
+            const button = document.getElementById("crawlBtn");
+
+            if (!baseURL) {
+                alert("Please enter a base URL");
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "Crawling...";
+            loader.style.display = "block";
+            table.style.display = "none";
+
+            try {
+                const response = await fetch(
+                    `http://localhost:4000/crawl?baseURL=${encodeURIComponent(baseURL)}`
+                );
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch data");
+                }
+
+                const data = await response.json();
+                renderTable(data);
+
+            } catch (error) {
+                console.error(error);
+                alert("Error fetching crawl data");
+            } finally {
+                button.disabled = false;
+                button.textContent = "Crawl";
+                loader.style.display = "none";
+            }
+        }
+
+        function renderTable(data) {
+            const table = document.getElementById("resultTable");
+            const tbody = table.querySelector("tbody");
+
+            tbody.innerHTML = "";
+
+            Object.entries(data).forEach(([url, count]) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${url}</td>
+                    <td>${count}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            table.style.display = "table";
+        }
+    </script>
+
+
+</body>
+
+</html>

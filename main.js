@@ -2,19 +2,26 @@ const { crawlPage } = require("./crawl.js")
 const { printReport } = require("./report.js")
 const express = require("express");
 const { config } = require("dotenv")
+const cors = require("cors");
 const app = express();
 config({
     path: ".env"
 });
-
+app.use(cors({
+    origin: "http://127.0.0.1:5500"
+}));
 const PORT = process.env.PORT || 5000;
 
 
 app.use(express.json());
 
 
-app.get('/', async (req, res) => {
-    const  baseURL = req.body.baseURL;
+app.get('/crawl', async (req, res) => {
+    const { baseURL } = req.query;
+
+    if (!baseURL) {
+        return res.status(400).json({ error: "baseURL is required" });
+    }
     const pagesMapResult = await crawlPage(baseURL, baseURL, {});
     res.json(pagesMapResult)
 })
