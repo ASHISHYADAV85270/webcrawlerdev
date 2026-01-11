@@ -8,7 +8,12 @@ config({
     path: ".env"
 });
 app.use(cors({
-    origin: "http://127.0.0.1:5500"
+    origin: [
+        "https://web-crawler-ashishdev.netlify.app",
+        "http://127.0.0.1:5500",   // local dev
+        "http://localhost:5500"   // local dev
+    ],
+    methods: ["GET"],
 }));
 const PORT = process.env.PORT || 5000;
 
