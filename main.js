@@ -1,6 +1,26 @@
 const { crawlPage } = require("./crawl.js")
 const { printReport } = require("./report.js")
+const express = require("express");
+const { config } = require("dotenv")
+const app = express();
+config({
+    path: ".env"
+});
 
+const PORT = process.env.PORT || 5000;
+
+
+app.use(express.json());
+
+
+app.get('/', async (req, res) => {
+    const  baseURL = req.body.baseURL;
+    const pagesMapResult = await crawlPage(baseURL, baseURL, {});
+    res.json(pagesMapResult)
+})
+
+
+// JUST FOR TESTINT PURPOSE
 async function main() {
     if (process.argv.length < 3) {
         console.log('No Website Providesd');
@@ -17,4 +37,6 @@ async function main() {
     printReport(pagesMapResult)
 }
 
-main()
+app.listen(PORT, () => {
+    console.log(`Example app listening on port ${PORT}`)
+})
