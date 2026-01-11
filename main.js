@@ -15,6 +15,9 @@ const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
 
+app.get('/', (req, res) => {
+    res.send("Hey Welcome to Web Crawler By Ashish.")
+})
 
 app.get('/crawl', async (req, res) => {
     const { baseURL } = req.query;
