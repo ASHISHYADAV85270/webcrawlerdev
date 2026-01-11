@@ -74,6 +74,8 @@
     </table>
 
     <script>
+        const API_URL = "https://webcrawlerdev.onrender.com";
+
         async function fetchData() {
             const baseURL = document.getElementById("baseUrlInput").value.trim();
             const loader = document.getElementById("loader");
@@ -97,7 +99,7 @@
 
             try {
                 const response = await fetch(
-                    `http://localhost:4000/crawl?baseURL=${encodeURIComponent(baseURL)}`
+                    `${API_URL}/crawl?baseURL=${encodeURIComponent(baseURL)}`
                 );
 
                 if (!response.ok) {
