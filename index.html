@@ -56,13 +56,9 @@
         <strong>Make sure to include <code>https://</code> as a prefix</strong>
         (example: <code>https://wagslane.dev</code>).
     </p>
-    
-    <input
-        type="text"
-        id="baseUrlInput"
-        placeholder="https://example.com"
-    />
-    
+
+    <input type="text" id="baseUrlInput" placeholder="https://example.com" />
+
     <button id="crawlBtn" onclick="fetchData()">Crawl</button>
 
     <div id="loader" class="loader">⏳ Crawling website, please wait...</div>
@@ -86,6 +82,11 @@
 
             if (!baseURL) {
                 alert("Please enter a base URL");
+                return;
+            }
+
+            if (!baseURL.startsWith("https://")) {
+                alert("Please include https:// at the beginning of the URL");
                 return;
             }
 
